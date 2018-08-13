@@ -1,0 +1,53 @@
+---
+    
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+      - name: Delete ACI Configuration
+        command: /usr/local/bin/acc-provision --flavor=kubernetes-1.7 -a -d -u admin -p {{ aci_admin_pass }} -c roles/network_plugin/contiv-aci/defaults/main.yml
+            
+
+- hosts: vmware-vm
+  gather_facts: no
+  connection: local
+  tasks:
+
+    - name: Include  vmware-vm vars
+      include_vars:
+        file: roles/vmware-vm/defaults/main.yml
+ 
+    - name: PowerOff VM
+      vmware_guest:
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+        state: poweredoff
+        
+    - name: Wait till "{{ inventory_hostname }}" is powered off
+      vmware_guest_facts: 
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+      register: facts 
+      until: facts.instance.hw_power_status == "poweredOff" 
+      retries: 10 
+      delay: 5
+
+    - name: Delete VM
+      vmware_guest:
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+        state: absent

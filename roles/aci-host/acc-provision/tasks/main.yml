@@ -1,0 +1,14 @@
+---
+
+- name: Copy "{{ acc_provision_installer }}"
+  copy:
+    src: "roles/aci-host/acc-provision/files/{{ acc_provision_installer }}"
+    dest: /tmp
+
+- name: Install acc_provition and acikubectl on master nodes
+  apt:
+    deb: "/tmp/{{ acc_provision_installer }}"
+
+- name: Copy acc_provition config to master node
+  template: src=roles/network_plugin/contiv-aci/defaults/main.yml dest=/tmp/aci-provision.yml
+  when: inventory_hostname == groups['kube-master'][0]

@@ -1,0 +1,41 @@
+---
+
+# Need to know the aci_config.system_id value this maps to the vCenter Port group
+- name: Include vars of aci-provision
+  include_vars:
+    file: roles/network_plugin/contiv-aci/defaults/main.yml
+
+- name: Clone and Configure VM
+  vmware_guest:
+    validate_certs: False
+    hostname: "{{ vm_vsphere_host }}"
+    username: "{{ vm_vsphere_user }}"
+    password: "{{ vm_vsphere_password }}"
+    datacenter: "{{ vm_vsphere_datacenter }}" 
+    folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+    name: "{{ inventory_hostname }}"
+    template: "{{ vm_template }}"
+    # Folder is in the format of <DataCenter>/vm/<Folder> the "vm" is hard coded in vcenter and you always need it.
+    annotation: "{{ vm_notes }}"
+    state: poweredon
+    wait_for_ip_address: True
+    disk:
+    - size_gb: "{{hd_size}}"
+      type: thin
+      ## you can speficy a DS if you want
+      #datastore: <name> 
+      autoselect_datastore: True
+    hardware:
+      memory_mb: "{{ram_size}}"
+
+    networks:
+    - name: "{{ mgmt_network  }}"       
+      ip: "{{ ansible_ssh_host }}"
+      netmask: "{{ mgmt_netmask }}" 
+      domain: "{{ domain }}"
+      gateway: "{{ gw }}" 
+       # I must connect an interface so I connect to the mgmt net, will reconfigure it once ACI pushes a port group.
+    - name: "{{ aci_config.system_id  }}"
+      type: static
+      ip: 0.0.0.0 
+      netmask: 0.0.0.0 

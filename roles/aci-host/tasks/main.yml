@@ -1,0 +1,42 @@
+---
+  - name: Include vars of aci-provision
+    include_vars:
+      file: roles/network_plugin/contiv-aci/defaults/main.yml
+  
+  - name: Include vars of vmware-vm
+    include_vars:
+      file: roles/vmware-vm/defaults/main.yml
+
+  - name: Update resolv.conf
+    template: src=resolv.conf.j2 dest=/etc/resolv.conf
+    become_method: sudo
+  
+  - name: Configure interface toward ACI
+    template: src=interfaces.conf.j2 dest=/etc/network/interfaces 
+ 
+  - name: Configure dhcp for ACI
+    template: src=dhclient.conf.j2 dest="/etc/dhcp/dhclient.conf"
+ 
+  - name: Restart Network Services
+    service:
+      name: networking.service
+      state: restarted
+
+  - name: Disable swap
+    command: swapoff -a
+
+  - name: Remove swap entry from fstab
+    lineinfile:
+      dest: /etc/fstab
+      regexp: '^/[\S]+\s+none\s+swap '
+      state: absent
+
+  - name: Update repos
+    apt:
+      update_cache: yes
+      upgrade: dist
+
+  #I need to update facts otherwsie the preinstall check of kubespray will fail as it does not find the 
+  # IP address of the interface toward aci.      
+  - name: do facts module to get latest information
+    setup:

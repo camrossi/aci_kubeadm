@@ -1,0 +1,15 @@
+##vCenter Parameters
+vm_vsphere_host: vc2.cam.ciscolabs.com
+vm_vsphere_user: administrator@vsphere.local
+vm_vsphere_password: 123Cisco123!
+vm_vsphere_datacenter: STLD
+vm_notes: "Kubernetes 1.7 fab2 setup"
+vm_folder: k8s-1.7
+vm_template: Ubuntu-16-04
+
+##Host Config
+# Mgmt IP address is derived from the inventory file "ansible_ssh_host" variable
+mgmt_network: VM Network 
+mgmt_netmask: 255.255.255.0
+gw: 192.168.66.1
+domain: cam.ciscolabs.com 

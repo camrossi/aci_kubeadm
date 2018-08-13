@@ -1,0 +1,30 @@
+---
+
+- name: Contiv-ACI | Copy cni plugins from hyperkube
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/cnibindir {{ hyperkube_image_repo }}:{{ hyperkube_image_tag }} /bin/bash -c '/bin/cp -a /opt/cni/bin/* /cnibindir/'"
+  register: cni_task_result
+  until: cni_task_result.rc == 0
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  changed_when: false
+  tags: [hyperkube, upgrade]
+
+- name: Cloud | Set cni directory permissions
+  file:
+    path: /opt/cni/bin
+    state: directory
+    owner: kube
+    recurse: true
+    mode: "u=rwX,g-rwx,o-rwx"
+
+- name: Creatge cni directory structure
+  file: path=/etc/cni/net.d/ state=directory
+
+- name: Configure Opflex CNI
+  template: src=10-opflex-cni.conf dest=/etc/cni/net.d/10-opflex-cni.conf
+
+- name: Reload Kubelet to switch to CNI
+  service:
+    name: kubelet
+    state: restarted
+  

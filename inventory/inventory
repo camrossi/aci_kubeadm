@@ -1,0 +1,34 @@
+# ## Configure 'ip' variable to bind kubernetes services on a
+# ## different ip than the default iface
+# ## For ACI this becomes the node_ip
+k8s-01 ansible_ssh_host=192.168.66.42 ip=10.32.0.11
+k8s-02 ansible_ssh_host=192.168.66.43 ip=10.32.0.12 
+k8s-03 ansible_ssh_host=192.168.66.44 ip=10.32.0.13 
+k8s-04 ansible_ssh_host=192.168.66.45 ip=10.32.0.14 
+k8s-05 ansible_ssh_host=192.168.66.46 ip=10.32.0.15
+
+# ## configure a bastion host if your nodes are not directly reachable
+# bastion ansible_ssh_host=x.x.x.x
+
+[kube-master]
+k8s-01
+k8s-02
+
+[etcd]
+k8s-01
+k8s-02
+k8s-03
+
+[kube-node]
+k8s-02
+k8s-03
+k8s-04
+k8s-05
+[k8s-cluster:children]
+kube-node
+kube-master
+
+## If you want to deploy VMs from template add them below
+#[vmware-vm:children]
+#kube-node
+#kube-master

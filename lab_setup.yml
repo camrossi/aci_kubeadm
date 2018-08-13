@@ -1,0 +1,120 @@
+---
+
+# ACI fabric config must exist before we start deploying K8S, so I install acc provision on the ansible host. 
+# and I push the ACI config from there. After I will also install it on the kube-master
+
+- hosts: 127.0.0.1
+  gather_facts: no
+  tasks:
+      - name: Install ACC Provision on the local host
+        pip:
+            name: acc-provision
+            version: 1.7.1
+      - name: Push ACI fabric config
+        command: /usr/local/bin/acc-provision --flavor=kubernetes-1.7 -a -u admin -p "{{ aci_admin_pass }}" -c roles/network_plugin/contiv-aci/defaults/main.yml  -o /dev/null
+        register: command_result
+        failed_when: "'IOError' in command_result.stderr"
+        
+      - name: Include vars of aci-provision
+        include_vars:
+          file: roles/network_plugin/contiv-aci/defaults/main.yml
+
+      - name: Create ACI Tenant
+        aci_tenant:
+          hostname: "{{ aci_config.apic_hosts[0] }}"
+          username: admin
+          password: "{{ aci_admin_pass }}"
+          validate_certs: no
+          tenant: "{{ aci_config.vrf.tenant }}"
+          state: present
+
+      - name: Create ACI VRF
+        aci_vrf:
+          hostname: "{{ aci_config.apic_hosts[0] }}"
+          username: admin
+          password: "{{ aci_admin_pass }}"
+          validate_certs: no
+          vrf: "{{ aci_config.vrf.name }}"
+          tenant: "{{ aci_config.vrf.tenant }}"
+          state: present
+
+      - name: Create ACI L3OUT (Just L3OUT and ExtEPG)
+        aci_rest:
+          hostname: "{{ aci_config.apic_hosts[0] }}"
+          username: admin
+          password: "{{ aci_admin_pass }}"
+          validate_certs: no
+          path: "/api/mo/uni/tn-{{ aci_config.vrf.tenant }}.json"
+          method: post
+          content: |
+            {
+            "l3extOut": {
+                "attributes": {
+                    "descr": "",
+                    "dn": "uni/tn-{{ aci_config.vrf.tenant }}/out-{{ aci_config.l3out.name }}",
+                    "enforceRtctrl": "export",
+                    "name": """{{ aci_config.l3out.name }}""",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "targetDscp": "unspecified"
+                },
+                "children": [
+                    {
+                        "l3extRsEctx": {
+                            "attributes": {
+                                "tnFvCtxName": """{{ aci_config.vrf.name }}"""
+                            }
+                        }
+                    },
+                    {
+                        "l3extInstP": {
+                            "attributes": {
+                                "descr": "",
+                                "floodOnEncap": "disabled",
+                                "matchT": "AtleastOne",
+                                "name": """{{ aci_config.l3out.external_networks[0] }}""",
+                                "nameAlias": "",
+                                "prefGrMemb": "exclude",
+                                "prio": "unspecified",
+                                "targetDscp": "unspecified"
+                            },
+                            "children": [
+                                {
+                                    "l3extSubnet": {
+                                        "attributes": {
+                                            "aggregate": "",
+                                            "descr": "",
+                                            "ip": "0.0.0.0/0",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "scope": "import-security"
+                                        }
+                                    }
+                                }
+
+                            ]
+                        }
+                    }
+                ]
+               }
+            }
+
+- hosts: vmware-vm
+  gather_facts: False
+  connection: local
+  roles:
+   - vmware-vm 
+
+- hosts: all
+  gather_facts: True
+  roles:
+    - aci-host
+
+- hosts: kube-master
+  gather_facts: False
+  roles:
+    - aci-host/acc-provision
+
+- include: cluster.yml
+

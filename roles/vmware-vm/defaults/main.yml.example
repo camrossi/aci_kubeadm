@@ -1,0 +1,17 @@
+##vCenter Parameters
+vm_vsphere_host: <hostname/ip>
+vm_vsphere_user: <user>
+vm_vsphere_password: <pass>
+vm_vsphere_datacenter: <DataCenter Name>
+vm_notes: ""
+vm_folder: <Folder>
+vm_template: <Template Name>
+
+##Host Config
+# Mgmt IP address is derived from the inventory file "ansible_ssh_host" variable
+mgmt_network: <Port Group Name for OOB>
+mgmt_netmask: <Net Mask>
+gw: <Gateway IP>
+domain: <domain Name> 
+hd_size: <Size in GB>
+ram_size: <Size in MB>
