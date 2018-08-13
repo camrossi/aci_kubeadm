@@ -1,11 +1,11 @@
 # Needed for OSX
-localhost ansible_python_interpreter=/usr/local/bin/python2
+localhost ansible_python_interpreter=/usr/bin/python
 
 # ## Configure 'ip' variable to bind kubernetes services on a
 # ## different ip than the default iface
 # ## For ACI this becomes the node_ip
-k8s-01 
-
+k8s-01 ansible_ssh_host=192.168.65.11 ip=10.100.0.11
+k8s-02 ansible_ssh_host=192.168.65.12 ip=10.100.0.12
 # ## configure a bastion host if your nodes are not directly reachable
 # bastion ansible_ssh_host=x.x.x.x
 
@@ -13,31 +13,12 @@ k8s-01
 k8s-01
 
 [kube-node]
-k8s-01
+k8s-02
+[k8s-cluster:children]
+kube-node
+kube-master
 
 ## If you want to deploy VMs from template add them below
 [vmware-vm:children]
 kube-node
 kube-master
-
-[vmware-vm:vars]
-#vCenter Parameters
-vm_vsphere_host=vc1.cam.ciscolabs.com
-vm_vsphere_user=administrator@vsphere.local
-vm_vsphere_password=123Cisco123!
-vm_vsphere_datacenter=STLD
-vm_notes="Kubernetes Training"
-vm_folder=K8S-Training
-vm_template=Ubuntu16-LinkedClone
-vm_linked_clone=yes
-vm_snapshotname=Base
-vm_datastore=ESXi1-DS
-
-##Host Config
-# Mgmt IP address is derived from the inventory file "ansible_ssh_host" variable
-ram_size=2048
-hd_size=16
-mgmt_network=VM Network 
-domain=cam.ciscolabs.com 
-
-

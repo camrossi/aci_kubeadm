@@ -1,12 +1,8 @@
 ---
   - name: Include vars of aci-provision
     include_vars:
-      file: roles/network_plugin/contiv-aci/defaults/main.yml
+      file: roles/contiv-aci/defaults/main.yml
   
-  - name: Include vars of vmware-vm
-    include_vars:
-      file: roles/vmware-vm/defaults/main.yml
-
   - name: Update resolv.conf
     template: src=resolv.conf.j2 dest=/etc/resolv.conf
     become_method: sudo
@@ -31,12 +27,27 @@
       regexp: '^/[\S]+\s+none\s+swap '
       state: absent
 
+  - name: add apt-key for Kubeadm
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+  - name: add kubernetes repo
+    copy:
+      content: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+      dest: /etc/apt/sources.list.d/kubernetes.list
+      force: no
+
   - name: Update repos
     apt:
       update_cache: yes
-      upgrade: dist
+      upgrade: no
+     
+  - name: install docker
+    apt:
+      name: docker.io
+      state: latest
+  - name: Install kubeadm, kubelet and kubectl 
+    apt: 
+      name: kubelet={{ kube_version }},kubectl={{ kube_version }},kubeadm={{ kube_version }}
+      state: present
 
-  #I need to update facts otherwsie the preinstall check of kubespray will fail as it does not find the 
-  # IP address of the interface toward aci.      
-  - name: do facts module to get latest information
-    setup:

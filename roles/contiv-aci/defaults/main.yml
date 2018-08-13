@@ -1,18 +1,15 @@
-# File name of the ACC provision installed
-acc_provision_installer: acc-provision_1.7.1-39_amd64.deb
-#
 # Configuration for ACI Fabric
 #
 aci_config:
-  system_id: KubeSpray             # Every opflex cluster must have a distict ID
+  system_id: k8s_pod1           # Every opflex cluster must have a distict ID
   apic_hosts:                   # List of APIC hosts to connect for APIC API
-  - 10.67.185.102
+  - 10.67.185.106
   vmm_domain:                   # Kubernetes VMM domain configuration
     encap_type: vxlan           # Encap mode: vxlan or vlan
     mcast_range:                # Every opflex VMM must use a distinct range
-      start: 225.22.1.1
-      end: 225.22.255.255
-    mcast_fabric: 225.1.2.4
+      start: 225.100.1.1
+      end: 225.100.1.255
+    mcast_fabric: 225.1.1.1
     nested_inside:
       type: vmware
       name: ACI
@@ -20,25 +17,26 @@ aci_config:
   # they are used, but not created by the provisioning tool.
   aep: ACI_AttEntityP             # The AEP for ports/VPCs used by this cluster
   vrf:                          # This VRF used to create all kubernetes EPs
-    name: vrf1
-    tenant: KubeSpray            # This can be system-id or common
+    name: k8s
+    tenant: common            # This can be system-id or common
   l3out:
-    name: l3out          # Used to provision external IPs
+    name: default          # Used to provision external IPs
     external_networks:
-    - default_extepg             # Used for external contracts
+    - default            # Used for external contracts
 
 #
 # Networks used by Kubernetes
 #
 net_config:
-  node_subnet: 10.32.0.1/16      # Subnet to use for nodes
-  pod_subnet: 10.33.0.1/16       # Subnet to use for Kubernetes Pods
-  extern_dynamic: 10.34.0.1/24   # Subnet to use for dynamic external IPs
-  extern_static: 10.35.0.1/24    # Subnet to use for static external IPs
-  node_svc_subnet: 10.36.0.1/24  # Subnet to use for service graph
-  kubeapi_vlan: 4011            # The VLAN used by the physdom for nodes
-  service_vlan: 4013            # The VLAN used by LoadBalancer services
-  infra_vlan: 3456             # The VLAN used by ACI infra
+  node_subnet: 10.100.0.1/16      # Subnet to use for nodes
+  pod_subnet: 10.101.0.1/16       # Subnet to use for Kubernetes Pods
+  extern_dynamic: 10.102.0.1/24   # Subnet to use for dynamic external IPs
+  extern_static: 10.103.0.1/24    # Subnet to use for static external IPs
+  node_svc_subnet: 10.104.0.1/24  # Subnet to use for service graph
+  cluster_svc_subnet: 10.105.0.1/24 #Not used By acc provision. This added here just for the ansible workflow. 
+  kubeapi_vlan: 3011       # The VLAN used by the physdom for nodes
+  service_vlan: 4012            # The VLAN used by LoadBalancer services
+  infra_vlan: 3457             # The VLAN used by ACI infra
 
 #
 # Configuration for container registry

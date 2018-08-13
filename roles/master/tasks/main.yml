@@ -1,0 +1,51 @@
+---
+
+# Need to know the aci_config.system_id value this maps to the vCenter Port group
+- name: Include vars of aci-provision
+  include_vars:
+    file: roles/contiv-aci/defaults/main.yml
+
+- name: Reset cluster
+  command: kubeadm reset 
+  
+- name: Kubeadm INIT
+  command: kubeadm init --token {{ kubeadm_token }} --pod-network-cidr={{ net_config.pod_subnet }}  --service-cidr={{ net_config.cluster_svc_subnet  }}
+
+- name: Create Kubernetes config directory
+  file: path="~/.kube/" state=directory
+
+- name: Change permissions of .kube/config
+  file: path=/etc/kubernetes/admin.conf mode=0775
+
+- name: Copy admin.conf to Home directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "~/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    remote_src: True 
+
+- name: Enable and restart kubelet 
+  systemd:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  
+- name: Copy acc-privision
+  copy:
+    src: roles/aci-host/acc-provision/files/{{ acc_provision_installer }}
+    dest: "~/{{ acc_provision_installer }}"
+
+- name: Install ACC Provision on the master node
+  apt:
+    deb: ~/{{ acc_provision_installer }}
+
+- name: Copy cni-confi
+  copy:
+    src:  aci-cni-config.yaml
+    dest: "~/aci-cni-config.yaml"
+
+- name: Deploy CNI
+  command: kubectl apply -f ~/aci-cni-config.yaml

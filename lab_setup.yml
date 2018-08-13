@@ -2,24 +2,38 @@
 
 # ACI fabric config must exist before we start deploying K8S, so I install acc provision on the ansible host. 
 # and I push the ACI config from there. After I will also install it on the kube-master
+- hosts: 127.0.0.1
+  gather_facts: no
+  tasks:
+      - name: Install ACC Provision on the local host
+        apt:
+          deb: roles/contiv-aci/files/acc-provision_1.9.0-31_amd64.deb
+        delegate_to: localhost
+        become: true
 
-#- hosts: 127.0.0.1
-#  gather_facts: no
-#  tasks:
-#      - name: Install ACC Provision on the local host
-#        pip:
-#            name: acc-provision
-#            version: 1.7.1
-#
+      - name: Generate CNI config and Push APIC Config
+        delegate_to: localhost
+        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -u admin -p "{{ aci_admin_pass }}" -c roles/contiv-aci/defaults/main.yml  -o aci-cni-config.yaml
+
 - hosts: vmware-vm
   gather_facts: False
   roles:
    - vmware-vm 
 
-     #- hosts: all
-     #  gather_facts: True
-     #  roles:
-     #    - aci-host
+- hosts: k8s-cluster
+  gather_facts: True
+  roles:
+    - aci-host
+- hosts: kube-master
+  gather_facts: True
+  roles:
+    - master
+
+- hosts: kube-node
+  gather_facts: True
+  roles:
+    - node
+
      #
      #- hosts: kube-master
      #  gather_facts: False

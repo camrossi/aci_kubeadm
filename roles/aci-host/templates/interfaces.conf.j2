@@ -3,7 +3,6 @@ auto {{ mgmt_if_name }}
 iface {{ mgmt_if_name }} inet static
     address {{ ansible_ssh_host }}
     netmask {{ mgmt_netmask }}
-    up route add default gw {{ gw }}
 
 # Interface connected to ACI
 auto {{ aci_if_name }}
@@ -23,7 +22,4 @@ iface {{ aci_if_name }}.{{ net_config.kubeapi_vlan }} inet static
     address {{ ip }} 
     netmask {{ net_config.node_subnet | ipaddr('netmask') }}
     mtu {{ aci_if_mtu }}
-    {% for route in routes_to_aci %}
-    up route add -net {{ route }} gw {{ net_config.node_subnet | ipaddr('address') }}
-    {% endfor %}
-    vlan-raw-device {{ aci_if_name }}
+    up route add default gw {{ net_config.node_subnet | ipaddr('address')}}

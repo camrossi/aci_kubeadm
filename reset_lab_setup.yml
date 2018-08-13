@@ -4,18 +4,13 @@
   connection: local
   tasks:
       - name: Delete ACI Configuration
-        command: /usr/local/bin/acc-provision --flavor=kubernetes-1.7 -a -d -u admin -p {{ aci_admin_pass }} -c roles/network_plugin/contiv-aci/defaults/main.yml
-            
+        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -d -u admin -p "{{ aci_admin_pass }}" -c roles/contiv-aci/defaults/main.yml  -o aci-cni-config.yaml
 
 - hosts: vmware-vm
   gather_facts: no
   connection: local
   tasks:
 
-    - name: Include  vmware-vm vars
-      include_vars:
-        file: roles/vmware-vm/defaults/main.yml
- 
     - name: PowerOff VM
       vmware_guest:
         validate_certs: False

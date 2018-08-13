@@ -1,0 +1,17 @@
+---
+- name: Reset cluster
+  command: kubeadm reset 
+
+- name: Join to Kubernetes cluster
+  command: kubeadm join --skip-preflight-checks 
+                 --token {{ kubeadm_token }} \
+                 {{ hostvars[groups['kube-master'][0]]['ip'] }}:6443 \
+                 --discovery-token-unsafe-skip-ca-verification
+
+- name: Enable and restart kubelet 
+  systemd:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  

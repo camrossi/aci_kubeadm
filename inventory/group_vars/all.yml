@@ -1,0 +1,31 @@
+# User and passwords to access the hosts
+ansible_ssh_pass: 123Cisco123
+ansible_user: cisco
+ansible_sudo_pass: 123Cisco123
+aci_admin_pass: 123Cisco123
+vm_vsphere_host: vc1.cam.ciscolabs.com
+vm_vsphere_user: administrator@vsphere.local
+vm_vsphere_password: 123Cisco123!
+vm_vsphere_datacenter: STLD
+vm_notes: "Kubernetes Training"
+vm_folder: K8S-Training
+vm_template: Ubuntu16-LinkedClone
+vm_linked_clone: yes
+vm_snapshotname: Base
+vm_datastore: ESXi1-DS
+
+##Host Config
+# Mgmt IP address is derived from the inventory file "ansible_ssh_host" variable
+ram_size: 2048
+hd_size: 16
+mgmt_network: VM Network 
+mgmt_netmask: 255.255.255.0
+domain: cam.ciscolabs.com 
+
+acc_provision_installer: acc-provision_1.9.0-31_amd64.deb
+k8s_flavor: kubernetes-1.10
+kube_version: 1.10.6-00
+kubeadm_token: fqv728.htdmfzf6rt9blhej
+upstream_dns_servers:
+  - 192.168.66.1
+

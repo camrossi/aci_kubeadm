@@ -32,9 +32,10 @@
 
     networks:
     - name: "{{ mgmt_network  }}"       
-      type: dhcp
-
-       # I must connect an interface so I connect to the mgmt net, will reconfigure it once ACI pushes a port group.
+      type: static
+      ip: "{{ ansible_ssh_host }}"
+      netmask: "{{ mgmt_netmask }}"
+    
     - name: "{{ aci_config.system_id  }}"
       type: static
       ip: 0.0.0.0 
