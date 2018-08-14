@@ -17,6 +17,12 @@
     regexp: '10\.96\.0\.10'
     replace: "{{ net_config.cluster_svc_subnet | ipaddr('address') + '0' }}" 
 
+- name: restart kublet to pick up the new cluster-dns also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: kubelet
+
 - name: Create Kubernetes config directory
   file: path="~/.kube/" state=directory
 

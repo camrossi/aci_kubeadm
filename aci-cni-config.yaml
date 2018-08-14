@@ -4,7 +4,7 @@ metadata:
   name: aci-containers-config
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
 data:
   controller-config: |-
@@ -108,7 +108,7 @@ metadata:
   name: aci-user-cert
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
 data:
   user.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUNkUUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQWw4d2dnSmJBZ0VBQW9HQkFLd2M5YVNqN1FyN1ZyTkoKVTFQVUZHbEczdnZmTjN6SnBML0dKYW1zaEFuOWdWNzRsSE8rV2gwTEp5OTcvZk9KdWtvYlJzaC9sYkY1L0RIcgpRM215aGhoWkNOQjAyQ28yMThQNmFDSkpmZkEyN1FOeXhyckdoRGhVRU5TMXY1djJEelN4eUs1TUc2b2R1Ujc4Ck03WEY5TzQzY2h2WTNkR242R1M1WGF5cS83Z25BZ01CQUFFQ2dZQm9MR01WMHM1ZnpqN3M1MTNUS0ZOdVlTSUkKQzFRM2FJa2FOaUdIc0U1L0NYeHJja1BRUm8rZWNxaTJHZk5jbTZrd3Y0KzVQVmZxZ3UzOWZPdHJWbjNJY3E4egp2akp0KzJHKytjR3pnOVgyYUQzdmxhZVBYUHNQL0tNZnZYOUpFYVNwbWdBQTRGUnV2Y0xmVklHVExPTWNnVEY2Cm1qMEpadUtROXNxWHUwZ0hRUUpCQU5mMlRqN1JpVVBQUXIzSk42NmZvU2MyUE1WaS9va0RwRWN4SkFPTlF1Q0MKcDkxZ0dhcXpZNE04ZGdlcEZFTEN2VXBpQ2JSNmdnU1pzTnlCeG9mcms4Y0NRUURNQlkyaHJlMXlWQXNjYVl4KwpSTk1oRHpNZzNYM0FjN3hSS1BOVHFZMFd1YStYZC9EMk9nY21MOVBvcDRVVXNZaVZ4UTk5MGM3RGtkKzduTHVqCjJmaWhBa0FZT3VsU2dQM3VucjExUDdOQW8yWllXT3grbFBuTDg1Mmw0eXlRUFhRb2JtQlpKU1FjRTk1eFpnSTAKSDlOSEhrUlFxU2svbDVNbzR2bUY5QVdMVUhJWEFrQXFrdzRYS3lCZHQwUUtUY3hQblRVaHRQWkthVzRRZHhaWgpLVjU5bXVnaVVlVmVpbHp5UlBHdytsSVNQc0w2cW9HQ0gzazRIRXcxYTM5d3V5Zzg3UU9CQWtCVGxhVFBOK1Y1CmhvbHFORlljRklPc09iSStMWGNWaFlDN2RMTmdaMUZqTHZtd2ZtQmtTTFl6RWJKQ0xtQ3hMWEpBNEpPMkxOOXgKdUppWXpXZFFldHNvCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
   user.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI2akNDQVZNQ0FnUG9NQTBHQ1NxR1NJYjNEUUVCQlFVQU1EMHhDekFKQmdOVkJBWVRBbFZUTVJZd0ZBWUQKVlFRS0RBMURhWE5qYnlCVGVYTjBaVzF6TVJZd0ZBWURWUVFEREExVmMyVnlJR3M0YzE5d2IyUXhNQjRYRFRFNApNRGd4TWpJek1UZzBOMW9YRFRJNE1EZ3hNREV4TVRnME4xb3dQVEVMTUFrR0ExVUVCaE1DVlZNeEZqQVVCZ05WCkJBb01EVU5wYzJOdklGTjVjM1JsYlhNeEZqQVVCZ05WQkFNTURWVnpaWElnYXpoelgzQnZaREV3Z1o4d0RRWUoKS29aSWh2Y05BUUVCQlFBRGdZMEFNSUdKQW9HQkFLd2M5YVNqN1FyN1ZyTkpVMVBVRkdsRzN2dmZOM3pKcEwvRwpKYW1zaEFuOWdWNzRsSE8rV2gwTEp5OTcvZk9KdWtvYlJzaC9sYkY1L0RIclEzbXloaGhaQ05CMDJDbzIxOFA2CmFDSkpmZkEyN1FOeXhyckdoRGhVRU5TMXY1djJEelN4eUs1TUc2b2R1Ujc4TTdYRjlPNDNjaHZZM2RHbjZHUzUKWGF5cS83Z25BZ01CQUFFd0RRWUpLb1pJaHZjTkFRRUZCUUFEZ1lFQUFQV2xqQVRIdklFODVlTmhLUlFXeHRJQwpXaEhtVGpIZFBJbTdrbkNBUXF0d0hUcmRHcDJkUXp4MFRvcnF1dkJHUHdmZUxTZUhGaW01YVcrUDY2b0FYK0d2CjVXL0lRSjVPdzZTUkVzZE1ic0lVWThYTllQRjhDaStRdE04ZDd4L1QwS3BWSVlpMmk3VzFzYWRmYm42am9jN3kKSVVXNFhSWnRJUjl0bjVBMWI5UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
@@ -119,7 +119,7 @@ metadata:
   name: aci-containers-controller
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -127,13 +127,13 @@ metadata:
   name: aci-containers-host-agent
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
   name: aci-containers:controller
 rules:
@@ -179,7 +179,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
   name: aci-containers:host-agent
 rules:
@@ -200,7 +200,7 @@ kind: ClusterRoleBinding
 metadata:
   name: aci-containers:controller
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -215,7 +215,7 @@ kind: ClusterRoleBinding
 metadata:
   name: aci-containers:host-agent
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -231,7 +231,7 @@ metadata:
   name: aci-containers-host
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
 spec:
   updateStrategy:
@@ -355,7 +355,7 @@ metadata:
   name: aci-containers-openvswitch
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
 spec:
   updateStrategy:
@@ -430,7 +430,7 @@ metadata:
   name: aci-containers-controller
   namespace: kube-system
   labels:
-    aci-containers-config-version: "3356d341-1f24-4f43-af69-a57b805cbc8c"
+    aci-containers-config-version: "830564e5-2ee8-4676-b651-b1768a52f249"
     network-plugin: aci-containers
     name: aci-containers-controller
 spec:
