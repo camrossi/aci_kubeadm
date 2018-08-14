@@ -11,6 +11,12 @@
 - name: Kubeadm INIT
   command: kubeadm init --token {{ kubeadm_token }} --pod-network-cidr={{ net_config.pod_subnet }}  --service-cidr={{ net_config.cluster_svc_subnet  }}
 
+- name: Fix 10-kubeadm.conf to use the correct cluster-dns
+  replace:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: '10\.96\.0\.10'
+    replace: "{{ net_config.cluster_svc_subnet | ipaddr('address') + '0' }}" 
+
 - name: Create Kubernetes config directory
   file: path="~/.kube/" state=directory
 
