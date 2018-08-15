@@ -7,13 +7,13 @@
   tasks:
       - name: Install ACC Provision on the local host
         apt:
-          deb: roles/contiv-aci/files/acc-provision_1.9.0-31_amd64.deb
+          deb: roles/aci-host/files/acc-provision_1.9.0-31_amd64.deb
         delegate_to: localhost
         become: true
 
       - name: Generate CNI config and Push APIC Config
         delegate_to: localhost
-        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -u admin -p "{{ aci_admin_pass }}" -c roles/contiv-aci/defaults/main.yml  -o aci-cni-config.yaml
+        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -u "{{ aci_user }}" -p "{{ aci_admin_pass }}" -c inventory/group_vars/all.yml  -o aci-cni-config.yaml
 
 - hosts: vmware-vm
   gather_facts: False
@@ -24,6 +24,7 @@
   gather_facts: True
   roles:
     - aci-host
+
 - hosts: kube-master
   gather_facts: True
   roles:
@@ -33,12 +34,3 @@
   gather_facts: True
   roles:
     - node
-
-     #
-     #- hosts: kube-master
-     #  gather_facts: False
-     #  roles:
-     #    - aci-host/acc-provision
-     #
-     #- include: cluster.yml
-

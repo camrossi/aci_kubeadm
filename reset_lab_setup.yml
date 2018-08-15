@@ -4,7 +4,7 @@
   connection: local
   tasks:
       - name: Delete ACI Configuration
-        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -d -u admin -p "{{ aci_admin_pass }}" -c roles/contiv-aci/defaults/main.yml  -o aci-cni-config.yaml
+        command: acc-provision --flavor="{{ k8s_flavor }}"  -a -d -u "{{ aci_user }}" -p "{{ aci_admin_pass }}" -c inventory/group_vars/all.yml  -o aci-cni-config.yaml
 
 - hosts: vmware-vm
   gather_facts: no
@@ -22,7 +22,7 @@
         name: "{{ inventory_hostname }}"
         state: poweredoff
         
-    - name: Wait till "{{ inventory_hostname }}" is powered off
+    - name: Wait till all the VMs are powered off
       vmware_guest_facts: 
         validate_certs: False
         hostname: "{{ vm_vsphere_host }}"

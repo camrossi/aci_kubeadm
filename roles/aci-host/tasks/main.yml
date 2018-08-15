@@ -1,7 +1,4 @@
 ---
-  - name: Include vars of aci-provision
-    include_vars:
-      file: roles/contiv-aci/defaults/main.yml
   
   - name: Update resolv.conf
     template: src=resolv.conf.j2 dest=/etc/resolv.conf

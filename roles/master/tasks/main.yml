@@ -1,10 +1,5 @@
 ---
 
-# Need to know the aci_config.system_id value this maps to the vCenter Port group
-- name: Include vars of aci-provision
-  include_vars:
-    file: roles/contiv-aci/defaults/main.yml
-
 - name: Reset cluster
   command: kubeadm reset 
   
@@ -47,7 +42,7 @@
   
 - name: Copy acc-privision
   copy:
-    src: roles/aci-host/acc-provision/files/{{ acc_provision_installer }}
+    src: roles/aci-host/files/{{ acc_provision_installer }}
     dest: "~/{{ acc_provision_installer }}"
 
 - name: Install ACC Provision on the master node

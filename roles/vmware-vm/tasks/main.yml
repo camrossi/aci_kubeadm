@@ -1,10 +1,5 @@
 ---
 
-# Need to know the aci_config.system_id value this maps to the vCenter Port group
-- name: Include vars of aci-provision
-  include_vars:
-    file: roles/contiv-aci/defaults/main.yml
-
 - name: Clone and Configure VM
   vmware_guest:
     validate_certs: False
@@ -41,3 +36,6 @@
       ip: 0.0.0.0 
       netmask: 0.0.0.0 
   delegate_to: localhost
+
+- name: Wait 600 seconds for target connection to become reachable/usable
+  wait_for_connection:

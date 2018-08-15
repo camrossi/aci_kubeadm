@@ -1,5 +1,0 @@
-## Most of the host configuration is derived from other configurations however we need to know
-## the name of the interfaces toward the mgmg access and the fabric.
-mgmt_if_name: ens160
-aci_if_name: ens192
-aci_if_mtu: 9000

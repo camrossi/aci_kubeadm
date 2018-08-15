@@ -1,31 +1,90 @@
-# User and passwords to access the hosts
+#User and passwords to access the Kubernetes VM.
+## The ansible_sudo_pass is the same that is used for the Ansible Host to install packages on it. 
 ansible_ssh_pass: 123Cisco123
 ansible_user: cisco
 ansible_sudo_pass: 123Cisco123
-aci_admin_pass: 123Cisco123
+
+# vCenter Credentials and Parameters
 vm_vsphere_host: vc1.cam.ciscolabs.com
 vm_vsphere_user: administrator@vsphere.local
 vm_vsphere_password: 123Cisco123!
 vm_vsphere_datacenter: STLD
 vm_notes: "Kubernetes Training"
 vm_folder: K8S-Training
-vm_template: Ubuntu16-LinkedClone
-vm_linked_clone: yes
-vm_snapshotname: Base
-vm_datastore: ESXi1-DS
+vm_template: Ubuntu16-LinkedClone   # The name of your Template. 
+vm_linked_clone: yes                # If you want a linked clone you also need to pass the name of the snapshot in the next variable.
+vm_snapshotname: Base               # The name of your snampshot
+vm_datastore: ESXi1-DS              # THe DS name, the Template and the VM must be in the same DS for linked clones. 
 
 ##Host Config
 # Mgmt IP address is derived from the inventory file "ansible_ssh_host" variable
-ram_size: 2048
-hd_size: 16
-mgmt_network: VM Network 
+ram_size: 2048                      #(MB)
+hd_size: 16                         #(GB)
+mgmt_network: VM Network            # The name of your Management Network Port Group in vCenter
 mgmt_netmask: 255.255.255.0
 domain: cam.ciscolabs.com 
+upstream_dns_servers:               # The DNS server to be configured in your VMs
+  - 192.168.66.1 
 
-acc_provision_installer: acc-provision_1.9.0-31_amd64.deb
+## The name of the linux interface for the management and aci interface. Change if requried
+mgmt_if_name: ens160
+aci_if_name: ens192
+aci_if_mtu: 9000                    # You need to set this to at least 1600
+
+
+acc_provision_installer: acc-provision_1.9.0-31_amd64.deb  # Download from cisco.com
+kube_version: 1.10.6-00             # This is the versioning number as per Ubuntu Packages. (apt-cache show <package> | grep Version)
+kubeadm_token: fqv728.htdmfzf6rt9blhej  # This is the kubeadm token. You should probably change it. 
+
+
+# Configuration for ACI Fabric
+## This tell acc-provision which version of kubernetes we are using. You can find the complete list by running
+## acc-provision --list-flavor
 k8s_flavor: kubernetes-1.10
-kube_version: 1.10.6-00
-kubeadm_token: fqv728.htdmfzf6rt9blhej
-upstream_dns_servers:
-  - 192.168.66.1
+aci_user: admin
+aci_admin_pass: 123Cisco123
+aci_config:
+  system_id: k8s_pod1               # Every opflex cluster must have a distict ID
+  apic_hosts:                       # List of APIC hosts to connect for APIC API
+  - 10.67.185.106
+  vmm_domain:                       # Kubernetes VMM domain configuration
+    encap_type: vxlan               # Encap mode: vxlan or vlan
+    mcast_range:                    # Every opflex VMM must use a distinct range
+      start: 225.100.1.1           
+      end: 225.100.1.255
+    mcast_fabric: 225.1.1.1
+    nested_inside:                  # If the K8S node are VM specify here the VMM domain.
+      type: vmware                  # A PortGroup called like system_id will be automatically created
+      name: ACI
+  # The following resources must already exist on the APIC,
+  # they are used, but not created by the provisioning tool.
+  aep: ACI_AttEntityP               # The AEP for ports/VPCs used by this cluster
+  vrf:                              # This VRF used to create all kubernetes EPs
+    name: k8s
+    tenant: common                  # This can be system-id or common
+  l3out:
+    name: default                   # Used to provision external IPs
+    external_networks:
+    - default                       # Used for external contracts
+
+#
+# Networks used by Kubernetes
+#
+net_config:
+  node_subnet: 10.100.0.1/16         # Subnet to use for nodes
+  pod_subnet: 10.101.0.1/16          # Subnet to use for Kubernetes Pods
+  extern_dynamic: 10.102.0.1/24      # Subnet to use for dynamic external IPs
+  extern_static: 10.103.0.1/24       # Subnet to use for static external IPs
+  node_svc_subnet: 10.104.0.1/24     # Subnet to use for service graph
+  cluster_svc_subnet: 10.105.0.1/24  # Subnet used for Cluster-IP Services
+  kubeapi_vlan: 3011                 # The VLAN used by the physdom for nodes
+  service_vlan: 4012                 # The VLAN used by LoadBalancer services
+  infra_vlan: 3457                   # The VLAN used by ACI infra
+
+#
+# Configuration for container registry
+# DO NOT CHANGE
+#
+registry:
+  image_prefix: noiro                   # e.g: registry.example.com/noiro
 
