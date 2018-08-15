@@ -43,7 +43,7 @@ The demo configuration that is in this repository is assuming you have deployed 
 
 * The hosts are configured with 2 interfaces:
   * ACI facing interface (ens192): This is the interface toward the ACI fabric and is the default GW of the nodes. You MUST have internet connectivity trough this interfaces.
-  * Managemnet interface (ens160): I expect the ansible host to be in the same subent, no you can't use this as your default GW
+  * Management interface (ens160): I expect the ansible host to be in the same subent, no you can't use this as your default GW
 
 
 ## Download acc-provision:
