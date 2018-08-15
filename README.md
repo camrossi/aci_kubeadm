@@ -50,9 +50,13 @@ The demo configuration that is in this repository is assuming you have deployed 
 From Cisco.com download dist-debs-\<version\>.tar.gz, unzip it and place the .deb file under **roles/aci-host/files/**
 
 ## Set the parameters 
-
+### inventory/group_vars/all.yml
 Customize inventory/group_vars/all.yml as per your requirements. 
 The included file has the configuration of my lab and every option should be self explanatory or has a comment. 
+
+### inventory/inventory
+
+Configure your inventory file as per your requirements 
 
 # Deploy with this command:
 ansible-playbook -i inventory/inventory -b lab_setup.yml
