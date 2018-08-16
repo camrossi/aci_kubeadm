@@ -24,7 +24,15 @@
       regexp: '^/[\S]+\s+none\s+swap '
       state: absent
 
-  - name: add apt-key for Kubeadm
+- name: Test http internet connectivity get http://www.google.com
+  uri:
+    url: http://www.google.com
+    
+- name: Test https internet connectivity get https://www.google.com
+  uri:
+    url: https://www.google.com
+  
+- name: add apt-key for Kubeadm
     apt_key:
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
 

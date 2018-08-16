@@ -40,9 +40,3 @@
 - name: Wait 600 seconds for the VMs to be reachable over SSH
   wait_for_connection:
 
-- name: Test http internet connectivity get http://www.google.com
-  uri:
-    url: http://www.google.com
-- name: Test https internet connectivity get https://www.google.com
-  uri:
-    url: https://www.google.com
