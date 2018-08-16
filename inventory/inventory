@@ -1,9 +1,9 @@
 # Needed for OSX
 localhost ansible_python_interpreter=/usr/bin/python
 
-# ## Configure 'ip' variable to bind kubernetes services on a
-# ## different ip than the default iface
-# ## For ACI this becomes the node_ip
+# Here we define the basic parameters of our hosts. 
+# The first is the hostname,  ansible_ssh_host=IP is the management interface IP addre
+# ip=IP is the ACI facing interface IP address. 
 k8s-01 ansible_ssh_host=192.168.65.11 ip=10.100.0.11
 k8s-02 ansible_ssh_host=192.168.65.12 ip=10.100.0.12
 # ## configure a bastion host if your nodes are not directly reachable

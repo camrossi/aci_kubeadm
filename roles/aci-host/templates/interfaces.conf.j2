@@ -22,4 +22,5 @@ iface {{ aci_if_name }}.{{ net_config.kubeapi_vlan }} inet static
     address {{ ip }} 
     netmask {{ net_config.node_subnet | ipaddr('netmask') }}
     mtu {{ aci_if_mtu }}
+    vlan-raw-device {{aci_if_name}}
     up route add default gw {{ net_config.node_subnet | ipaddr('address')}}

@@ -13,16 +13,24 @@ End to End LAB Deployment with Contiv-ACI
 * Install python-netaddr
   * pip install netaddr
 * If using password to authenticate ssh session, you need to install sshpass [Installation guide](https://gist.github.com/arunoda/7790979)
-
+* Disable host key checking:  edit the file `/etc/ansible/ansible.cfg` and set the `host_key_checking = False`
 ### Supported OS:
 * Ubuntu 16.04
-* If you want you can grab an Ubuntu VM template at this link: [Ubuntu-16.04 Template](https://cisco.box.com/s/hiu0chr0f5el6k9vlt1du912ybn7okuj)
-  * This template is configured with:
+
+* If you want you can grab an Ubuntu VM at this link: [Ubuntu-16.04](https://cisco.box.com/s/hiu0chr0f5el6k9vlt1du912ybn7okuj)
+  * This VM is configured with:
     * 2 CPU, 16GB HD, 2GB RAM and 2 NIC
     * username/pass: cisco/123Cisco123
-* You can create your own template as long as it is a Ubuntu 16.04. 
-* I am using Linked Clones by default, so you should ensure the Template has a Snapshot.
-* When you create the Template configure the 2 NIC as CONNECTED or the cloned VM will boot up with disconnected NIC and the script will fail. 
+    * The VM IS NOT a Template. It is a normal VM with a Snapshot called "Base".
+    * By default the scripts deployes Linked Clones, if you are ok with this no action is needed. 
+
+* New Virtual Machine requirements:
+  * Two NICs
+  * Install SSH and Python
+  * PowerOff the VM, Createa a Snapshot.
+    * If you call the Snapsop anything else than "Base" edit `vm_snapshotnam`e variale in `inventory/group_vars/all.yml`
+
+* All the VM parametes, hostname, IP etc... are taken from the inventory file and the `inventory/group_vars/all.yml` file.
 ### Supported K8S Versions:
 * 1.10 to 1.6, I tested with 1.10 only
 
@@ -47,11 +55,12 @@ The demo configuration that is in this repository is assuming you have deployed 
 
 
 ## Download acc-provision:
-From Cisco.com download dist-debs-\<version\>.tar.gz, unzip it and place the .deb file under **roles/aci-host/files/**
+From Cisco.com download `dist-debs-<version>.tar.gz`, unzip it and place the .deb file under `roles/aci-host/files/`
+Thi scrips is pre-configured to use `acc -provision_1.9.0-23_amd64.deb`, if you use a diffenret file you need edit the `inventory/group_vars/all.yml` file.
 
 ## Set the parameters 
 ### inventory/group_vars/all.yml
-Customize inventory/group_vars/all.yml as per your requirements. 
+Customize `inventory/group_vars/all.yml` as per your requirements. 
 The included file has the configuration of my lab and every option should be self explanatory or has a comment. 
 
 ### inventory/inventory
@@ -59,5 +68,5 @@ The included file has the configuration of my lab and every option should be sel
 Configure your inventory file as per your requirements 
 
 # Deploy with this command:
-ansible-playbook -i inventory/inventory -b lab_setup.yml
+`ansible-playbook -i inventory/inventory -b lab_setup.yml`
 
