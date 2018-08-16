@@ -1,28 +1,28 @@
 ---
   
-  - name: Update resolv.conf
-    template: src=resolv.conf.j2 dest=/etc/resolv.conf
-    become_method: sudo
-  
-  - name: Configure interface toward ACI
-    template: src=interfaces.conf.j2 dest=/etc/network/interfaces 
- 
-  - name: Configure dhcp for ACI
-    template: src=dhclient.conf.j2 dest="/etc/dhcp/dhclient.conf"
- 
-  - name: Restart Network Services
-    service:
-      name: networking.service
-      state: restarted
+- name: Update resolv.conf
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf
+  become_method: sudo
 
-  - name: Disable swap
-    command: swapoff -a
+- name: Configure interface toward ACI
+  template: src=interfaces.conf.j2 dest=/etc/network/interfaces 
 
-  - name: Remove swap entry from fstab
-    lineinfile:
-      dest: /etc/fstab
-      regexp: '^/[\S]+\s+none\s+swap '
-      state: absent
+- name: Configure dhcp for ACI
+  template: src=dhclient.conf.j2 dest="/etc/dhcp/dhclient.conf"
+
+- name: Restart Network Services
+  service:
+    name: networking.service
+    state: restarted
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: Remove swap entry from fstab
+  lineinfile:
+    dest: /etc/fstab
+    regexp: '^/[\S]+\s+none\s+swap '
+    state: absent
 
 - name: Test http internet connectivity get http://www.google.com
   uri:
@@ -36,23 +36,23 @@
     apt_key:
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
-  - name: add kubernetes repo
-    copy:
-      content: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
-      dest: /etc/apt/sources.list.d/kubernetes.list
-      force: no
+- name: add kubernetes repo
+  copy:
+    content: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    force: no
 
-  - name: Update repos
-    apt:
-      update_cache: yes
-      upgrade: no
-     
-  - name: install docker
-    apt:
-      name: docker.io
-      state: latest
-  - name: Install kubeadm, kubelet and kubectl 
-    apt: 
-      name: kubelet={{ kube_version }},kubectl={{ kube_version }},kubeadm={{ kube_version }}
-      state: present
+- name: Update repos
+  apt:
+    update_cache: yes
+    upgrade: no
+   
+- name: install docker
+  apt:
+    name: docker.io
+    state: latest
+- name: Install kubeadm, kubelet and kubectl 
+  apt: 
+    name: kubelet={{ kube_version }},kubectl={{ kube_version }},kubeadm={{ kube_version }}
+    state: present
 
