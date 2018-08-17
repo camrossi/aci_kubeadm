@@ -33,13 +33,13 @@
     mode: 0755
     remote_src: True 
 
-- name: Create .kube directory for cisco user
+- name: Create .kube directory for the cisco user
   file:
     path: "/home/cisco/.kube/"
     state: directory
     mode: 0755
 
-- name: Copy admin.conf to cisco directory
+- name: Copy admin.conf to cisco user home directory
   copy:
     src: /etc/kubernetes/admin.conf
     dest: "/home/cisco/.kube/config"
@@ -47,6 +47,16 @@
     group: "{{ ansible_user }}"
     mode: 0755
     remote_src: True
+
+- name: Copy guestbook configuration to cisco user home directory
+  copy:
+    src: roles/master/files/guestbook.yaml
+    dest: "/home/cisco/guestbook.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    remote_src: no
+
 
 - name: Enable and restart kubelet 
   systemd:
