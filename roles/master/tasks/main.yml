@@ -33,14 +33,20 @@
     mode: 0755
     remote_src: True 
 
+- name: Create .kube directory for cisco user
+  file:
+    path: "/home/cisco/.kube/"
+    state: directory
+    mode: 0755
+
 - name: Copy admin.conf to cisco directory
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: "cisco/.kube/config"
+    dest: "/home/cisco/.kube/config"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0755
-    remote_src: True 
+    remote_src: True
 
 - name: Enable and restart kubelet 
   systemd:
