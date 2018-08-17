@@ -24,10 +24,19 @@
 - name: Change permissions of .kube/config
   file: path=/etc/kubernetes/admin.conf mode=0775
 
-- name: Copy admin.conf to Home directory
+- name: Copy admin.conf to root home directory
   copy:
     src: /etc/kubernetes/admin.conf
     dest: "~/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    remote_src: True 
+
+- name: Copy admin.conf to cisco directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "cisco/.kube/config"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0755
