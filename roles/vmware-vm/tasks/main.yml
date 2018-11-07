@@ -12,6 +12,7 @@
     template: "{{ vm_template }}"
     linked_clone: "{{ vm_linked_clone }}"
     snapshot_src: "{{ vm_snapshotname }}"
+    esxi_hostname: "{{  esxi_hostname }}"
   
     # Folder is in the format of <DataCenter>/vm/<Folder> the "vm" is hard coded in vcenter and you always need it.
     annotation: "{{ vm_notes }}"

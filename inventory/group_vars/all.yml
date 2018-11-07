@@ -14,6 +14,7 @@ vm_folder: K8S-Training
 vm_template: Ubuntu16-LinkedClone   # The name of your Template. 
 vm_linked_clone: yes                # If you want a linked clone you also need to pass the name of the snapshot in the next variable.
 vm_snapshotname: Base               # The name of your snampshot
+esxi_hostname: esxi1.cam.ciscolabs.com #name of the esxi host. Host and DataStore must match if is not a shared DS
 vm_datastore: ESXi1-DS              # THe DS name, the Template and the VM must be in the same DS for linked clones. 
 
 ##Host Config
