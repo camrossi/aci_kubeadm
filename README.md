@@ -1,4 +1,4 @@
-End to End LAB Deployment with Contiv-ACI
+End to End LAB Deployment with ACI-CNI
 ======
 ## Requirements:
 ### Ansible Host:
