@@ -70,3 +70,4 @@ Configure your inventory file as per your requirements
 # Deploy with this command:
 `ansible-playbook -i inventory/inventory -b lab_setup.yml`
 
+
