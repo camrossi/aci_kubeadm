@@ -12,6 +12,7 @@
     template: "{{ vm_template }}"
     linked_clone: "{{ vm_linked_clone }}"
     snapshot_src: "{{ vm_snapshotname }}"
+    esxi_hostname: "{{  esxi_hostname }}"
   
     # Folder is in the format of <DataCenter>/vm/<Folder> the "vm" is hard coded in vcenter and you always need it.
     annotation: "{{ vm_notes }}"
@@ -21,7 +22,7 @@
     - size_gb: "{{hd_size}}"
       type: thin
       ## you can speficy a DS if you want
-      datastore: "{{vm_datastore}}" 
+      datastore: "{{ vm_datastore }}" 
     hardware:
       memory_mb: "{{ram_size}}"
 
@@ -30,13 +31,28 @@
       type: static
       ip: "{{ ansible_ssh_host }}"
       netmask: "{{ mgmt_netmask }}"
-    
-    - name: "{{ aci_config.system_id  }}"
-      type: static
-      ip: 0.0.0.0 
-      netmask: 0.0.0.0 
+      start_connected: True
   delegate_to: localhost
 
 - name: Wait 600 seconds for the VMs to be reachable over SSH
   wait_for_connection:
-
+    
+- name: Create ACI Interface
+  vmware_guest_network:
+    validate_certs: False
+    hostname: "{{ vm_vsphere_host }}"
+    username: "{{ vm_vsphere_user }}"
+    password: "{{ vm_vsphere_password }}"
+    datacenter: "{{ vm_vsphere_datacenter }}" 
+    name: "{{ inventory_hostname }}"
+    cluster: "Cluster1"
+    gather_network_info: false
+    networks:
+      - name: "{{ aci_config.system_id }}"
+        dvswitch_name: "{{ aci_config.vmm_domain.nested_inside.name }}"
+        state: new
+        start_connected: True
+        connected: True
+  delegate_to: localhost
+- pause:
+    prompt: "vmware_guest_network has a bug and will not select the correct portgroup. Go to vCenter and select the right port group for the ACI interface and then press a key"

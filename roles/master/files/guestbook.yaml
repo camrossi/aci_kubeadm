@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1
 kind: Deployment
 metadata:
   name: frontend
@@ -54,7 +54,7 @@ spec:
     app: guestbook
     tier: frontend
 ---
-apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1
 kind: Deployment
 metadata:
   name: redis-master
@@ -99,7 +99,7 @@ spec:
     role: master
     tier: backend
 ---
-apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1
 kind: Deployment
 metadata:
   name: redis-slave

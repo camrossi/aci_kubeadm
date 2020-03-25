@@ -1,19 +1,9 @@
 ---
 - name: Reset cluster
-  command: kubeadm reset 
+  command: kubeadm reset -f
 
 - name: Join to Kubernetes cluster
-  command: kubeadm join --skip-preflight-checks 
-                 --token {{ kubeadm_token }} \
-                 {{ hostvars[groups['kube-master'][0]]['ip'] }}:6443 \
-                 --discovery-token-unsafe-skip-ca-verification
-
-- name: Fix 10-kubeadm.conf to use the correct cluster-dns
-  replace:
-    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: '10\.96\.0\.10'
-    replace: "{{ net_config.cluster_svc_subnet | ipaddr('address') + '0' }}"
-
+  command: kubeadm join  --token {{ kubeadm_token }}  {{ hostvars[groups['kube-master'][0]]['ip'] }}:6443 --discovery-token-unsafe-skip-ca-verification --ignore-preflight-errors='all'
 
 - name: Enable and restart kubelet 
   systemd:

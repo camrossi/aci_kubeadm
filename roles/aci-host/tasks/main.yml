@@ -1,19 +1,13 @@
 ---
   
-- name: Update resolv.conf
-  template: src=resolv.conf.j2 dest=/etc/resolv.conf
-  become_method: sudo
-
 - name: Configure interface toward ACI
-  template: src=interfaces.conf.j2 dest=/etc/network/interfaces 
+  template: src=01-netcfg.yaml.j2 dest=/etc/netplan/01-netcfg.yaml
 
 - name: Configure dhcp for ACI
   template: src=dhclient.conf.j2 dest="/etc/dhcp/dhclient.conf"
 
-- name: Restart Network Services
-  service:
-    name: networking.service
-    state: restarted
+- name: Netplan Apply
+  command: sudo netplan apply
 
 - name: Disable swap
   command: swapoff -a

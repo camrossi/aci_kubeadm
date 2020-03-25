@@ -2,3 +2,4 @@
 *.crt
 *.deb
 *.DS_Store
+*.retry

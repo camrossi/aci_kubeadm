@@ -1,0 +1,33 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+     {{ mgmt_if_name }}:
+        addresses: [ {{  ansible_ssh_host ~ "/" ~ ((ansible_ssh_host ~ "/" ~ mgmt_netmask) | ipaddr('prefix') ) }} ]
+        dhcp4: no
+        dhcp6: no
+     {{ aci_if_name }}:
+        match:
+            macaddress: {{ hostvars[inventory_hostname]['ansible_%s'|format(aci_if_name)].macaddress }}
+        set-name: {{ aci_if_name }}
+        dhcp4: no
+        dhcp6: no
+        mtu: 9000
+  vlans:
+     node-{{ net_config.kubeapi_vlan }}:
+       id: {{ net_config.kubeapi_vlan }}
+       link: {{ aci_if_name }}
+       addresses: [ {{ ip ~ "/" ~ net_config.node_subnet | ipaddr('prefix') }} ]
+       gateway4: {{ net_config.node_subnet | ipaddr('address') }}
+       nameservers:
+          addresses:
+{% for nameserver in upstream_dns_servers %}
+          - {{nameserver}}
+{% endfor %}
+     infra-{{ net_config.infra_vlan }}:
+       id: {{ net_config.infra_vlan }}
+       link: {{ aci_if_name }}
+       dhcp4: yes
+       routes:
+       - to: 224.0.0.0/4
+         scope: link
