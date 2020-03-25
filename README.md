@@ -2,7 +2,7 @@ End to End LAB Deployment with ACI-CNI
 ======
 ## Requirements:
 ### Ansible Host:
-* Install latest ansible version (I tested this with 2.6) 
+* Install latest ansible version (I tested this with 2.9) 
   * http://docs.ansible.com/ansible/latest/intro_installation.html
   * Install all ansible requirements 
 * Python 2.7.9 or higher (I tested with 2.7.12)
@@ -15,7 +15,7 @@ End to End LAB Deployment with ACI-CNI
 * If using password to authenticate ssh session, you need to install sshpass [Installation guide](https://gist.github.com/arunoda/7790979)
 * Disable host key checking:  edit the file `/etc/ansible/ansible.cfg` and set the `host_key_checking = False`
 ### Supported OS:
-* Ubuntu 16.04
+* Ubuntu 18
 
 * If you want you can grab an Ubuntu VM at this link: [Ubuntu-16.04](https://cisco.box.com/s/hiu0chr0f5el6k9vlt1du912ybn7okuj)
   * This VM is configured with:
@@ -25,14 +25,14 @@ End to End LAB Deployment with ACI-CNI
     * By default the scripts deployes Linked Clones, if you are ok with this no action is needed. 
 
 * New Virtual Machine requirements:
-  * Two NICs
+  * One NICs
   * Install SSH and Python
   * PowerOff the VM, Createa a Snapshot.
     * If you call the Snapsop anything else than "Base" edit `vm_snapshotnam`e variale in `inventory/group_vars/all.yml`
 
 * All the VM parametes, hostname, IP etc... are taken from the inventory file and the `inventory/group_vars/all.yml` file.
 ### Supported K8S Versions:
-* 1.10 to 1.6, I tested with 1.10 only
+* 1.17 (older should work as well)
 
 ## ACI Fabric Pre-Requisites
 Your fabric needs to have basic connectivity pre-configured for your hosts. 
@@ -70,3 +70,6 @@ Configure your inventory file as per your requirements
 # Deploy with this command:
 `ansible-playbook -i inventory/inventory -b lab_setup.yml`
 
+# Current Issues:
+vmware_guest_network fails to select my existing DVS PortGroup and instead creates a new standard port group. Might be related to [This Issue](https://github.com/ansible/ansible/pull/65994)
+For now ansible will pause and wait for the user to fix the port group manually and then press return

@@ -55,4 +55,4 @@
         connected: True
   delegate_to: localhost
 - pause:
-    prompt: "vmware_guest_network has a bug and will not select the correct portgroup. Go to vCenter and select the right port group for the ACI interface and then press a key"
+    prompt: "vmware_guest_network has a bug and will not select the correct portgroup. Go to vCenter and select the right port group for the ACI interface and then press RETURN"
