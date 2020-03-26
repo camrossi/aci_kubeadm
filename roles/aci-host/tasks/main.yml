@@ -45,6 +45,12 @@
   apt:
     name: docker.io
     state: latest
+
+- name: Add cisco user to docker group
+  user:
+    name: cisco
+    group: docker
+
 - name: Install kubeadm, kubelet and kubectl 
   apt: 
     name: kubelet={{ kube_version }},kubectl={{ kube_version }},kubeadm={{ kube_version }}

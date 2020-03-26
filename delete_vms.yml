@@ -1,0 +1,42 @@
+---
+    
+- hosts: vmware-vm
+  gather_facts: no
+  connection: local
+  tasks:
+
+    - name: PowerOff VM
+      vmware_guest:
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+        state: poweredoff
+        
+    - name: Wait till all the VMs are powered off
+      vmware_guest_facts: 
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+      register: facts 
+      until: facts.instance.hw_power_status == "poweredOff" 
+      retries: 10 
+      delay: 5
+
+    - name: Delete VM
+      vmware_guest:
+        validate_certs: False
+        hostname: "{{ vm_vsphere_host }}"
+        username: "{{ vm_vsphere_user }}"
+        password: "{{ vm_vsphere_password }}"
+        datacenter: "{{ vm_vsphere_datacenter }}" 
+        folder: "{{ vm_vsphere_datacenter }}/vm/{{ vm_folder }}"
+        name: "{{ inventory_hostname }}"
+        state: absent

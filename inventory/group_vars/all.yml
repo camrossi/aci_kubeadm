@@ -45,15 +45,15 @@ k8s_flavor: kubernetes-1.17
 aci_user: admin
 aci_admin_pass: 123Cisco123
 aci_config:
-  system_id: k8s_pod1            # Every opflex cluster must have a distict ID
+  system_id: k8s_pod3            # Every opflex cluster must have a distict ID
   apic_hosts:                       # List of APIC hosts to connect for APIC API
   - 10.67.185.106
   vmm_domain:                       # Kubernetes VMM domain configuration
     encap_type: vxlan               # Encap mode: vxlan or vlan
     mcast_range:                    # Every opflex VMM must use a distinct range
-      start: 225.100.1.1           
-      end: 225.100.1.255
-    mcast_fabric: 225.1.1.1
+      start: 225.100.3.1         
+      end: 225.100.3.255
+    mcast_fabric: 225.1.1.3
     nested_inside:                  # If the K8S node are VM specify here the VMM domain.
       type: vmware                  # A PortGroup called like system_id will be automatically created
       name: ACI
@@ -61,25 +61,25 @@ aci_config:
   # they are used, but not created by the provisioning tool.
   aep: ACI_AttEntityP               # The AEP for ports/VPCs used by this cluster
   vrf:                              # This VRF used to create all kubernetes EPs
-    name: k8s_pod1
-    tenant: k8s_pod1                  # This can be system-id or common
+    name: k8s_pod3
+    tenant: k8s_pod3                  # This can be system-id or common
   l3out:
     l3domain: l3out
-    name: l3out                   # Used to provision external IPs
+    name: k8s                   # Used to provision external IPs
     external_networks:
     - default                      # Used for external contracts
 #
 # Networks used by Kubernetes
 #
 net_config:
-  node_subnet: 10.100.0.1/16         # Subnet to use for nodes
-  pod_subnet: 10.101.0.1/16          # Subnet to use for Kubernetes Pods
-  extern_dynamic: 10.102.0.1/24      # Subnet to use for dynamic external IPs
-  extern_static: 10.103.0.1/24       # Subnet to use for static external IPs
-  node_svc_subnet: 10.104.0.1/24     # Subnet to use for service graph
-  cluster_svc_subnet: 10.105.0.1/24  # Subnet used for Cluster-IP Services
-  kubeapi_vlan: 3011                 # The VLAN used by the physdom for nodes
-  service_vlan: 3012                 # The VLAN used by LoadBalancer services
+  node_subnet: 10.112.0.1/16         # Subnet to use for nodes
+  pod_subnet: 10.113.0.1/16          # Subnet to use for Kubernetes Pods
+  extern_dynamic: 10.114.0.1/24      # Subnet to use for dynamic external IPs
+  extern_static: 10.115.0.1/24       # Subnet to use for static external IPs
+  node_svc_subnet: 10.116.0.1/24     # Subnet to use for service graph
+  cluster_svc_subnet: 10.117.0.1/24  # Subnet used for Cluster-IP Services
+  kubeapi_vlan: 3031                 # The VLAN used by the physdom for nodes
+  service_vlan: 3032                 # The VLAN used by LoadBalancer services
   infra_vlan: 3457                   # The VLAN used by ACI infra
 
 #
