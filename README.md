@@ -17,7 +17,7 @@ End to End LAB Deployment with ACI-CNI
 ### Supported OS:
 * Ubuntu 18
 
-* If you want you can grab an Ubuntu VM at this link: [TBD](https://cisco.box.com/)
+* If you want you can grab an Ubuntu VM at this link: [Ubuntu18](https://cisco.box.com/s/gj02ex4indch1mb7v6994cth44f76hy2)
   * This VM is configured with:
     * 2 CPU, 16GB HD, 2GB RAM and 2 NIC
     * username/pass: cisco/123Cisco123
