@@ -3,3 +3,4 @@
 *.deb
 *.DS_Store
 *.retry
+aci-cni-config.yaml

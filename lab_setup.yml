@@ -4,6 +4,13 @@
 # and I push the ACI config from there. After I will also install it on the kube-master
 - hosts: 127.0.0.1
   gather_facts: no
+  vars:
+   aci_login: &aci_login
+     hostname: "{{ aci_config.apic_hosts[0] }}"
+     username: '{{ aci_user }}'
+     password: '{{ aci_admin_pass }}'
+     use_proxy: 'no'
+     validate_certs: false
   tasks:
       - name: Install ACC Provision on the local host
         apt:
@@ -11,6 +18,41 @@
         delegate_to: localhost
         become: true
 
+      - name: Create ACI Tenant for the Cluster
+        aci_tenant:
+          <<: *aci_login
+          name: "{{ aci_config.system_id }}"
+        delegate_to: localhost
+
+      
+      - name: Create ACI VRF
+        aci_vrf:
+          <<: *aci_login
+          tenant: "{{ aci_config.vrf.tenant }}"
+          name: "{{ aci_config.vrf.tenant }}"
+          state: present
+        delegate_to: localhost
+ 
+      - name: Add L3OUT
+        aci_l3out:
+          <<: *aci_login
+          tenant: "{{ aci_config.vrf.tenant }}"
+          name: "{{ aci_config.l3out.name }}"
+          domain: " {{ aci_config.l3out.l3domain }}"
+          vrf: "{{ aci_config.vrf.name }}"
+          route_control: [ "export" ]
+        delegate_to: localhost
+
+      - name: Add extEPG 
+        aci_l3out_extepg:
+          <<: *aci_login
+          tenant: "{{ aci_config.vrf.tenant }}"
+          l3out: "{{ aci_config.l3out.name }}"
+          name: "{{ item }}"
+        with_items: "{{ aci_config.l3out.external_networks }}"
+        delegate_to: localhost
+      - pause:
+          prompt: "Connect to APIC NOW and finish confiuring your L3OUT, you need to ADD your Nodes, routing protocol and the subnet in the ExtEPGs. Once done hit return"
       - name: Generate CNI config and Push APIC Config
         delegate_to: localhost
         command: acc-provision --flavor="{{ k8s_flavor }}"  -a -u "{{ aci_user }}" -p "{{ aci_admin_pass }}" -c inventory/group_vars/all.yml  -o aci-cni-config.yaml
@@ -18,7 +60,7 @@
 - hosts: vmware-vm
   gather_facts: False
   roles:
-   - vmware-vm 
+    - vmware-vm 
 
 - hosts: k8s-cluster
   gather_facts: True
@@ -34,3 +76,4 @@
   gather_facts: True
   roles:
     - node
+
